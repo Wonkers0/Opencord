@@ -1,0 +1,312 @@
+$backgroundPrimary: hsl(220, 7.7%, 22.9%);
+$backgroundSecondary: hsl(223, 6.9%, 19.8%);
+$backgroundTertiary: hsl(216, 7.2%, 13.5%);
+$backgroundTertiaryDarker: darken($backgroundTertiary, 2%);
+$blurple: #6370f4;
+$strawberryRed: #c83f49;
+$mutedText: hsl(214, 4%, 65.3%);
+$statusPositive: hsl(139, 47.1%, 33.3%);
+$navButtonHover: rgb(79,84,92);
+$navButtonSelected: rgba($navButtonHover, 0.7);
+$link: hsl(197, 100%, 47.8%);
+
+$circleBtnSize: 3rem;
+$sidebarPadding: 0.725rem;
+$navbarHeight: 3rem;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'GG Sans';
+  font-weight: 300;
+  font-size: 1rem;
+}
+
+body{
+  height: 100vh;
+  overflow: hidden;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background-color: unset;
+}
+
+.circleBtnWrapper{
+  position: relative;
+
+  .tooltip {
+    position: absolute;
+    left: 4.25rem;
+    top: 50%;
+    z-index: 5;
+
+    transform: scale(0) translateY(-50%);
+    transform-origin: top left;
+    
+    padding: 0.6rem 0.5rem 0.6rem 0.5rem;
+    min-height: 1.5rem;
+    width: fit-content;
+    white-space: nowrap;
+
+    font-weight: 500;
+
+    border-radius: 0.5rem;
+    background-color: $backgroundTertiaryDarker;
+    color: white;
+  }
+
+  .tooltip::before{
+    content: '';
+    background: inherit;
+    
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-45%, -50%) rotate(45deg);
+
+    width: 10px;
+    height: 10px;
+  }
+
+  .circleBtn{
+    width: $circleBtnSize;
+    aspect-ratio: 1;
+    border-radius: $circleBtnSize;
+  
+    background-color: $backgroundPrimary;
+    overflow: hidden;
+    transition: border-radius 200ms ease-out, background-color 150ms ease-out, color 150ms ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .circleBtn.comingSoon{color: $strawberryRed;}
+}
+
+.circleBtnWrapper:hover {
+  .tooltip {
+    transform: scale(1) translateY(-50%);
+    transition: transform 50ms;
+  }
+
+  .btnIndicator:not(.selected){
+    height: 1.2rem;
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 250ms ease-out;
+  }
+}
+
+.circleBtn.selected {border-radius: $circleBtnSize*0.35;}
+
+.circleBtn.friendsBtn.selected {background-color: $blurple;}
+
+.circleBtn.comingSoon.selected{
+  background-color: $strawberryRed;
+  color: white;
+}
+
+.sidebar{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  background-color: $backgroundTertiary;
+  width: $circleBtnSize + $sidebarPadding * 2;
+  padding: $sidebarPadding;
+  height: 100vh;
+
+  float: left;
+}
+
+.btnIndicator{
+  position: absolute;
+  left: -$sidebarPadding;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transform-origin: center left;
+
+  width: 0.5rem;
+  height: 0rem;
+  border-radius: 1rem;
+  background-color: white;
+
+  transition: height 150ms ease-out, transform 250ms ease-out;
+}
+
+.btnIndicator.unread, .btnIndicator.selected {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.btnIndicator.unread{
+  height: 0.5rem;
+}
+
+.btnIndicator.selected{
+  height: $circleBtnSize * 0.85;
+  border-radius: 1rem;
+ 
+  background-color: white;
+}
+
+nav {
+  float: left;
+  width: calc(100% - ($circleBtnSize + $sidebarPadding * 2));
+  height: $navbarHeight;
+  background-color: $backgroundPrimary;
+  box-shadow: 0px 1px 2px $backgroundTertiaryDarker;
+
+  position: relative;
+  z-index: 1; // Lets box shadow flow over elements below
+
+  .searchbarWrapper {
+    height: inherit;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+
+    .searchbar {
+      width: inherit;
+      height: 28px;
+      padding: 1px 6px 1px 6px;
+
+      background-color: $backgroundTertiary;
+      color: $mutedText;
+      border-radius: 4px;
+
+      text-align: left;
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+
+  .mainNav {
+    height: inherit;
+    float: left;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #friendsTitle{
+      margin-left: 1rem;
+      color: white;
+      font-size: 1.05rem;
+      font-weight: 400;
+
+      .friendsIcon{
+        margin-right: 0.4rem;
+      }
+    }
+
+    .navBtn{
+      color: $mutedText;
+      font-size: 1.05rem;
+      font-weight: 400;
+      margin-right: 0.45rem;
+      padding: 2px 8px 2px 8px;
+      border-radius: 0.2rem;
+    }
+
+    .navBtn:hover{
+      background-color: rgba($navButtonHover, 0.5);
+      color: lighten($mutedText, 20%);
+    }
+
+    .navBtn.friendBtn {
+      background-color: $statusPositive;
+      color: white;
+    }
+
+    .navBtn.selected{
+      background-color: $navButtonSelected;
+      color: white;
+    }
+  }
+}
+
+.searchbarWrapper, .DMList{
+  width: 220px;
+  padding: 0px 10px 0px 10px;
+  box-sizing: content-box;
+  background-color: $backgroundSecondary;
+}
+
+.DMList{
+  height: calc(100vh - $navbarHeight);
+  float: left;
+  padding-top: 0.5rem;
+
+  .friendsTab{
+    width: inherit;
+    height: 2.625rem;
+
+    color: $mutedText;
+    font-weight: 400;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+
+    padding: 10px;
+    border-radius: 0.25rem;
+  }
+
+  .friendsTab:hover{
+    background-color: lighten($backgroundSecondary, 5%);
+  }
+
+  .friendsTab.selected{
+    background-color: $navButtonSelected;
+    color: white;
+
+    path {
+      fill: white;
+    }
+  }
+}
+
+main {
+  width: calc(100% - ($circleBtnSize + $sidebarPadding * 2) - 240px);
+  height: calc(100vh - $navbarHeight);
+  background-color: $backgroundPrimary;
+  float: left;
+}
+
+.mainWrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+
+  height: inherit;
+  width: 100%;
+
+  color: $mutedText;
+  text-align: center;
+  font-weight: 800;
+}
+
+a{
+  color: $link;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
+}
