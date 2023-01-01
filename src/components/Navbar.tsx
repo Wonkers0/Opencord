@@ -1,13 +1,19 @@
-import { MenuTab } from "./App";
+import { doc } from "firebase/firestore";
+import { useDocument } from "react-firebase-hooks/firestore";
+import { firestore } from "../main";
+import { DocRef, MenuTab } from "./App";
 import Linebreak from "./Linebreak";
 import NavButton from "./NavButton";
 
 interface NavbarProps{
   menuTab: MenuTab,
-  setMenuTab: Function
+  setMenuTab: Function,
+  userID: string
 }
 
-export default function Navbar({menuTab, setMenuTab}: NavbarProps){
+export default function Navbar({menuTab, setMenuTab, userID}: NavbarProps){
+  const [userData, ignored, ignore] = useDocument(doc(firestore, "users", userID))
+
   return (
     <nav>
       <section className="searchbarWrapper">
@@ -23,9 +29,9 @@ export default function Navbar({menuTab, setMenuTab}: NavbarProps){
 
         <NavButton text="Online" menuTabOfThis={MenuTab.ONLINE_FRIENDS} currentMenuTab={menuTab} setMenuTab={setMenuTab} />
         <NavButton text="All" menuTabOfThis={MenuTab.ALL_FRIENDS} currentMenuTab={menuTab} setMenuTab={setMenuTab} />
-        <NavButton text="Pending" menuTabOfThis={MenuTab.PENDING_REQUESTS} currentMenuTab={menuTab} setMenuTab={setMenuTab} />
+        <NavButton text="Pending" menuTabOfThis={MenuTab.PENDING_REQUESTS} currentMenuTab={menuTab} setMenuTab={setMenuTab} pingCount={userData?.data()?.incomingRequests.length == 0 ? null : userData?.data()?.incomingRequests.length} />
         <NavButton text="Blocked" menuTabOfThis={MenuTab.BLOCKED_USERS} currentMenuTab={menuTab} setMenuTab={setMenuTab} />
-        <button className="navBtn friendBtn">Add Friend</button>
+        <button className="navBtn friendBtn" onClick={() => setMenuTab(MenuTab.ADD_FRIEND)}>Add Friend</button>
       </section>
     </nav>
   )

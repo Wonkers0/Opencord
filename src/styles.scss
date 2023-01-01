@@ -2,17 +2,25 @@ $backgroundPrimary: hsl(220, 7.7%, 22.9%);
 $backgroundSecondary: hsl(223, 6.9%, 19.8%);
 $backgroundTertiary: hsl(216, 7.2%, 13.5%);
 $backgroundTertiaryDarker: darken($backgroundTertiary, 2%);
+$backgroundTertiaryLighter: lighten($backgroundTertiary, 4%);
+$loadingBackground: hsl(240,10%,16%);
 $blurple: #6370f4;
+$blurpleDark: hsl(235, 51.4%, 52.4%);
+$logoBlurple: hsl(235,86%,65%);
 $strawberryRed: #c83f49;
 $mutedText: hsl(214, 4%, 65.3%);
+$interactiveHover: hsl(210, 2.9%, 86.7%);
 $statusPositive: hsl(139, 47.1%, 33.3%);
 $navButtonHover: rgb(79,84,92);
 $navButtonSelected: rgba($navButtonHover, 0.7);
 $link: hsl(197, 100%, 47.8%);
+$statusDanger: hsl(359, 82.6%, 59.4%);
+$textPositive: hsl(139, 51.6%, 52.2%);
 
 $circleBtnSize: 3rem;
 $sidebarPadding: 0.725rem;
 $navbarHeight: 3rem;
+$signInBannerWidth: 12.5rem;
 
 * {
   padding: 0;
@@ -27,6 +35,9 @@ $navbarHeight: 3rem;
 body{
   height: 100vh;
   overflow: hidden;
+  position: static;
+
+  background-color: $backgroundSecondary;
 }
 
 button {
@@ -35,42 +46,73 @@ button {
   background-color: unset;
 }
 
+input {
+  border: none;
+  background-color: unset;
+}
+
+bold {
+  font-weight: 600;
+  font-size: inherit;
+}
+
+.tooltip {
+  position: absolute;
+  left: 4.25rem;
+  top: 50%;
+  z-index: 5;
+
+  scale: 0.75;
+  visibility: hidden;
+  transform-origin: top left;
+  
+  padding: 0.6rem 0.5rem;
+  min-height: 1.5rem;
+  width: fit-content;
+  white-space: nowrap;
+
+  font-weight: 500;
+
+  border-radius: 0.5rem;
+  background-color: $backgroundTertiaryDarker;
+  color: white;
+
+  user-select: none;
+}
+
+.tooltip::before{
+  content: '';
+  background: inherit;
+  
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-45%, -50%) rotate(45deg);
+
+  width: 10px;
+  height: 10px;
+}
+
+.tooltip#vertical{
+  left: 50%;
+  top: 0;
+
+  transform: none;
+  scale: 0.75;
+  visibility: hidden;
+
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.tooltip#vertical::before{
+  left: 50%;
+  top: 100%;  
+}
+
 .circleBtnWrapper{
   position: relative;
-
-  .tooltip {
-    position: absolute;
-    left: 4.25rem;
-    top: 50%;
-    z-index: 5;
-
-    transform: scale(0) translateY(-50%);
-    transform-origin: top left;
-    
-    padding: 0.6rem 0.5rem 0.6rem 0.5rem;
-    min-height: 1.5rem;
-    width: fit-content;
-    white-space: nowrap;
-
-    font-weight: 500;
-
-    border-radius: 0.5rem;
-    background-color: $backgroundTertiaryDarker;
-    color: white;
-  }
-
-  .tooltip::before{
-    content: '';
-    background: inherit;
-    
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translate(-45%, -50%) rotate(45deg);
-
-    width: 10px;
-    height: 10px;
-  }
 
   .circleBtn{
     width: $circleBtnSize;
@@ -90,8 +132,10 @@ button {
 
 .circleBtnWrapper:hover {
   .tooltip {
-    transform: scale(1) translateY(-50%);
-    transition: transform 50ms;
+    transform: translateY(-50%);
+    scale: 1;
+    visibility: visible;
+    transition: scale 50ms;
   }
 
   .btnIndicator:not(.selected){
@@ -165,8 +209,12 @@ nav {
   position: relative;
   z-index: 1; // Lets box shadow flow over elements below
 
+  overflow: hidden;
+
   .searchbarWrapper {
+    box-sizing: content-box;
     height: inherit;
+    width: 220px;
 
     display: flex;
     justify-content: center;
@@ -219,6 +267,23 @@ nav {
       margin-right: 0.45rem;
       padding: 2px 8px 2px 8px;
       border-radius: 0.2rem;
+
+      .navPing{
+        background-color: $statusDanger;
+        color: white;
+
+        width: 1rem;
+        height: 1rem;
+        margin-left: 0.5rem;
+        border-radius: 50%;
+        
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
     }
 
     .navBtn:hover{
@@ -239,9 +304,7 @@ nav {
 }
 
 .searchbarWrapper, .DMList{
-  width: 220px;
   padding: 0px 10px 0px 10px;
-  box-sizing: content-box;
   background-color: $backgroundSecondary;
 }
 
@@ -249,9 +312,11 @@ nav {
   height: calc(100vh - $navbarHeight);
   float: left;
   padding-top: 0.5rem;
+  position: relative;
+  width: 240px;
 
   .friendsTab{
-    width: inherit;
+    width: 100%;
     height: 2.625rem;
 
     color: $mutedText;
@@ -278,6 +343,46 @@ nav {
       fill: white;
     }
   }
+
+  .DMTitle{
+    padding: 1.125rem 0.5rem 1.125rem 0.5rem;
+
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    color: $mutedText;
+    transition: color 150ms ease-out;
+    
+    span{
+      cursor: default;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .createDM {
+      transition: color 150ms ease-out;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+  }
+
+  .DMTitle:hover{
+    span {
+      color: $interactiveHover;
+    }
+  }
+
+  .createDM:hover{
+    color: $interactiveHover;
+  }
+
+  .noDMsGFX{
+    fill: $backgroundPrimary;
+    width: 100%;
+    padding-right: 1.5rem;
+  }
 }
 
 main {
@@ -300,6 +405,8 @@ main {
   color: $mutedText;
   text-align: center;
   font-weight: 800;
+
+  overflow: hidden;
 }
 
 a{
@@ -310,3 +417,442 @@ a{
 a:hover{
   text-decoration: underline;
 }
+
+.signInWrapper{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  align-items: center;
+
+  width: 45rem;
+  aspect-ratio: 1.5;
+  border-radius: 1rem;
+
+  background-color: $backgroundPrimary;
+  padding: 1.2rem;
+
+  .banner{
+    height: 100%;
+    width: $signInBannerWidth;
+    border-radius: 0.75rem;
+
+    background-image: url("../src/assets/opencordSideBanner.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: $logoBlurple;
+  }
+}
+
+.signInForm{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 2.5rem;
+
+  height: 100%;
+  width: calc(100% - $signInBannerWidth);
+
+  color: white;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-style: italic;
+    margin-bottom: 3rem;
+  }
+}
+
+.signIn {
+  img {
+    width: 2rem;
+  }
+
+  border-radius: 0.3rem;
+
+  width: 15rem;
+  height: 3rem;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0rem 1rem;
+
+  font-weight: 400;
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.google{
+  background-color: white;
+  border: 2px solid darken(white, 25%);
+  color: black;
+
+  &:hover{
+    background-color: darken(white, 15%);
+  }
+}
+
+.github{
+  background-color: $backgroundTertiaryDarker;
+  border: 2px solid lighten($backgroundTertiaryDarker, 5%);
+  color: white;
+
+  &:hover{
+    background-color: lighten($backgroundTertiaryDarker, 5%);
+    border-color: $backgroundSecondary;
+  }
+}
+
+.discord{
+  background-color: $logoBlurple;
+  border: 2px solid darken($logoBlurple, 5%);
+  color: white;
+
+  &:hover{
+    background-color: lighten($logoBlurple, 5%);
+    border-color: $logoBlurple;
+  }
+}
+
+.userWrapper{
+  width: 100%;
+  height: 3.25rem;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0rem 0.5rem;
+  cursor: pointer;
+
+  background-color: $backgroundTertiaryLighter;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .userInfo, .userSettings{
+    border-radius: 0.25rem;
+  }
+
+  .userInfo{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 0.5rem;
+
+    height: 2.5rem;
+    min-width: 7rem;
+    width: fit-content;
+    padding: 0rem 0.2rem;
+
+    .userProfilePicture{
+      width: 1.95rem;
+      aspect-ratio: 1;
+      position: relative;
+
+      img {
+        border-radius: 1rem;
+
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        width: inherit;
+        height: inherit;
+      }
+
+      .profileStatus{
+        position: absolute;
+        left: 85%;
+        top: 85%;
+        transform: translate(-50%, -50%);
+
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 1rem;
+        background-color: $backgroundTertiaryLighter;
+        outline: 3px solid $backgroundTertiaryLighter;
+      }
+    } 
+
+    .username{
+      width: 9rem;
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      white-space: nowrap;
+
+      #username{
+        width: 100%;
+        display: block;
+        overflow: hidden;
+
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-overflow: ellipsis;
+      }
+
+      #usertag{
+        font-size: 0.75rem;
+        color: $mutedText;
+      }
+    }
+  }
+
+  .userSettings{
+    width: 2rem;
+    aspect-ratio: 1;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.userInfo:hover, .userSettings:hover{
+  background-color: $backgroundPrimary;
+}
+
+.loadingWrapper{
+  width: 100vw;
+  height: 100vh;
+  background-color: $loadingBackground;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  video {
+    width: 15rem;
+  }
+
+  h1 {
+    color: white;
+    font-weight: 400;
+    font-size: 1rem;
+    margin-top: -3rem;
+  }
+}
+
+#bumpus{
+  width: 1.15rem;
+  height: 1.15rem;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: 500;
+
+  border-radius: 0.1rem;
+  background-color: $backgroundTertiaryLighter;
+  margin-right: 1.5px;
+}
+
+#bumpus::before{
+  content: 'B';
+}
+
+
+.blurpleBtn{
+  height: 2rem;
+  padding: 2px 1rem;
+
+  background-color: $blurple;
+  border-radius: 0.2rem;
+
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 400;
+
+  transition: background-color 100ms ease-out;
+}
+
+.blurpleBtn:disabled{
+  background-color: darken(desaturate($blurpleDark, 10), 10%);
+  color: $mutedText;
+}
+
+.blurpleBtn:hover{
+  background-color: $blurpleDark;
+}
+
+.friendHeader{
+  width: 100%;
+  min-height: 9.6rem;
+  height: fit-content;
+  padding: 20px 30px 0px 30px;
+
+  h1 {
+    color: white;
+    font-weight: 500;
+  }
+
+  h2 {
+    color: $mutedText;
+    font-size: 0.875rem;
+    margin: 0.5rem 0rem 1rem 0rem;
+  }
+
+  .friendReqInput{
+    width: 100%;
+    height: 50px;
+    background-color: $backgroundTertiary;
+    border: 1px solid $backgroundTertiaryDarker;
+    border-radius: 0.5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0rem 0.75rem 0rem 0.75rem;
+    
+    input{
+      font-size: 1.05rem;
+      font-weight: 400;
+
+      width: calc(100% - 10rem);
+      color: white;
+    }
+  }
+
+  .friendReqInput.selected{border-color: $link;}
+
+  .friendReqInput.error{border-color: $statusDanger;}
+
+  .friendReqInput.success{border-color: $textPositive;}
+
+  .errorHeading{
+    display: none;
+    margin: 0.5rem 0rem 1rem 0rem;
+
+    color: lighten($statusDanger, 15%);
+    font-size: 0.85rem;
+    font-weight: 300;
+  }
+
+  .errorHeading.success{
+    color: $textPositive;
+  }
+}
+
+.friendReqFooter{
+  margin-top: 5rem;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+
+  h1 {
+    color: $mutedText;
+    text-align: center;
+  }
+}
+
+.tooltipBtnWrapper:hover{
+  position: relative;
+
+  .tooltip#vertical {
+    scale: 1;
+    transform: translate(-50%, -125%);
+    transition: scale 50ms ease-out;
+    visibility: visible;
+  }
+}
+
+.pendingTabWrapper{
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+
+  h1 {
+    font-size: 0.75rem;
+    color: $mutedText;
+    font-weight: 500;
+
+    margin-bottom: 1rem;
+  }
+
+  .requestsWrapper{
+    margin-top: 0.5rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.userCard {
+  cursor: pointer;
+  width: 100%;
+  height: 3.8rem;
+  padding: 1rem 0.625rem;
+  position: relative;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.5rem;
+
+  .cardUser{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .profilePicture{
+      width: 2rem;
+      height: 2rem;
+      border-radius: 1rem;
+    }
+
+    .cardUserInfo{
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: $mutedText;
+
+      .usernameInfo{
+        color: white;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .cardControls{
+    display: flex;
+    gap: 0.6rem;
+
+    .tooltipBtnWrapper{
+      background-color: $backgroundSecondary;
+      color: $mutedText;
+      
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 2rem;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tooltipBtnWrapper.deny:hover{color: $statusDanger;}
+    .tooltipBtnWrapper.accept:hover{color: $statusPositive;}
+  }
+}
+
+.userCard:hover{background-color: rgba($navButtonHover, 0.4);}
