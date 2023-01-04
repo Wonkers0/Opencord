@@ -8,13 +8,15 @@ export enum PFPType{
 export enum Status{
   ONLINE="onlineStatus",
   IDLE="idleStatus",
-  DO_NOT_DISTURB="dndStatus"
+  DO_NOT_DISTURB="dndStatus",
+  INVISIBLE="offlineStatus"
 }
 
 export const statusInfo = new Map<Status, string>([
   [Status.ONLINE, "Online"],
   [Status.IDLE, "Idle"],
-  [Status.DO_NOT_DISTURB, "Do Not Disturb"]
+  [Status.DO_NOT_DISTURB, "Do Not Disturb"],
+  [Status.INVISIBLE, "Offline"]
 ])
 
 interface Props{

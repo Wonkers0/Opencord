@@ -11,12 +11,11 @@ interface Props{
   thirdParty: ThirdParty
 }
 
-const providers = new Map<ThirdParty, firebase.auth.AuthProvider>([
-  [ThirdParty.GOOGLE, new firebase.auth.GoogleAuthProvider()],
-  [ThirdParty.GITHUB, new firebase.auth.GithubAuthProvider()]
-])
-
 export default function ThirdPartySignIn({thirdParty}: Props){
+  const providers = new Map<ThirdParty, firebase.auth.AuthProvider>([
+    [ThirdParty.GOOGLE, new firebase.auth.GoogleAuthProvider()],
+    [ThirdParty.GITHUB, new firebase.auth.GithubAuthProvider()]
+  ])
   const className = thirdParty.toLowerCase();
 
   const signIn = (thirdParty: ThirdParty) => {

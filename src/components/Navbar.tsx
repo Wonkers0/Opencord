@@ -1,7 +1,7 @@
 import { doc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { firestore } from "../main";
-import { DocRef, MenuTab } from "./App";
+import { MenuTab } from "./App";
 import Linebreak from "./Linebreak";
 import NavButton from "./NavButton";
 

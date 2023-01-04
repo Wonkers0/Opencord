@@ -1,0 +1,82 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    match /users/{user} {
+      allow read: if user() != null
+      allow create: if user() != null && ownsDoc(user)
+      allow update: if user() != null && ownsDoc(user) || 
+      (requestChangesOnlyTheseFields(["friends", "incomingRequests", "outgoingRequests"]) 
+      && canChangeFriend())
+    }
+
+    function user(){
+      return request.auth
+    }
+
+    function ownsDoc(id){
+      return user().uid == id
+    }
+    
+    // A user can write to documents of other users only if:
+    // 1. They are friends with the user who owns the document 
+    // that they are trying to write to
+    // 2. They are only changing the "friends" field or the "incomingRequests" field. 
+    // (This isn't being checked here but is above on line 9)
+    // 3. The only element added or removed from these lists is the ID
+    // of the user (Can't remove other people from your friends' friends list)
+    function canChangeFriend(){
+    	// This stops users from adding themselves (or someone else) 
+    	// to somebody else's friends list without a friend request 
+    	// (That would be quite bad 👽)
+    	let friends = [];
+    	let requestFriends = requestData().friends;
+    	let friendsDiff = arrayDiff(friends, requestFriends);
+      
+    	let addingSelfToFriendsValidly =
+    	changedData().hasAll(["friends"]) == false ||
+    	resource.data.outgoingRequests.toSet().hasAll(friendsDiff); 
+      // 👆 Do the users that are being added to this friends' list already
+      //  have a friend request?
+		      
+    
+    	return addingSelfToFriendsValidly || 
+      (isAddingSelfToField("incomingRequests", user().uid) || 
+      isRemovingSelfFromField("outgoingRequests", user().uid))
+    }
+    
+    // Checks if the request is only adding the 
+    // request user to the list, and nothing else.
+    function isAddingSelfToField(fieldName, userID){
+    	let oldList = resource.data[fieldName];
+      let newList = requestData()[fieldName];
+      
+      let sizeMatches = newList.size() == oldList.size() + 1;
+      return sizeMatches && arrayDiff(newList, oldList) == [userID].toSet();
+    }
+    
+    function isRemovingSelfFromField(fieldName, userID){
+    	let oldList = resource.data[fieldName];
+      let newList = requestData()[fieldName];
+      
+      let sizeMatches = newList.size() == oldList.size() - 1;
+      return sizeMatches && arrayDiff(oldList, newList) == [userID].toSet();
+    }
+    
+    function arrayDiff(arr1, arr2){
+      return arr1.toSet().difference(arr2.toSet());
+    }
+    
+    function requestData(){
+  		return request.resource.data;
+		}
+    
+    function changedData(){
+    	return requestData().diff(resource.data).affectedKeys()
+    }
+    
+    function requestChangesOnlyTheseFields(fields){
+    	return changedData().hasOnly(fields);
+    }
+  }
+}

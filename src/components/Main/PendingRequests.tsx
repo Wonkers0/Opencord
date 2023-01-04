@@ -1,6 +1,5 @@
-import { doc, DocumentData } from "firebase/firestore"
+import { DocumentData } from "firebase/firestore"
 import { useState } from "react"
-import { useDocumentOnce } from "react-firebase-hooks/firestore"
 import { firestore } from "../../main"
 import { DocRef } from "../App"
 import Linebreak from "../Linebreak"

@@ -1,5 +1,3 @@
-import TooltipButton from "./TooltipButton"
-
 interface Props{
   profilePictureURL: string,
   username: string,

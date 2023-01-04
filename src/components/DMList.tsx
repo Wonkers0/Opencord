@@ -1,5 +1,4 @@
 import { DocumentData } from "firebase/firestore";
-import ProfilePicture, { Status } from "./ProfilePicture";
 import TooltipButton from "./TooltipButton";
 import UserInfo from "./UserInfo";
 
