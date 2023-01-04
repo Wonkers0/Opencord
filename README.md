@@ -10,3 +10,5 @@ Only authentification via google is done yet
 Accepting one friend request gets rid of all of them instead of only the one you accepted
 
 Having multiple tabs open and closing only 1 will set the user as offline
+
+Need to set height property on user card at the bottom instead of assuming 1:1 aspect ratio
