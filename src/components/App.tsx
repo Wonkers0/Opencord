@@ -32,16 +32,13 @@ export default function App() {
   const [userData, ignored, ignore] = useDocument(
     user ? doc(firestore, 'users', user.uid) : null
   )
-  console.log("Funny app ig")
   
   if(user && !userDataRef){
-    console.log("Ok now am reading")
     const docRef = firestore.doc(`users/${user.uid}`) 
     setUserDataRef(docRef)
     let userStatus = 0
 
     docRef.get().then(doc => {
-      console.log(doc.data())
       if (!doc.exists) {
         docRef.set({
           DMs: [],
