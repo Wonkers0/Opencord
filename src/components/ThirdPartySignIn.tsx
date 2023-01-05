@@ -22,7 +22,6 @@ export default function ThirdPartySignIn({thirdParty}: Props){
     const provider = providers.get(thirdParty)
     if(!provider) return
 
-    console.log(auth.currentUser)
     auth.signInWithPopup(provider)
   }
   
