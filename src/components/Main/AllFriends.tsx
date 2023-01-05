@@ -16,34 +16,38 @@ interface Props{
 export default function AllFriends({userData, userDataRef, setMenuTab}: Props){
   const [friendElements, setFriendElements] = useState<JSX.Element[]>([])
 
-  console.log(userData)
-
   const refreshTab = () => {
-    const friends = userData?.friends
-    const friendCards: JSX.Element[] = []
-    let key = 0
+    userDataRef?.get().then(doc => {
+      const friends = doc.data()?.friends
+      const friendCards: JSX.Element[] = []
+      let key = 0
+  
+      if(friends.length == 0){
+        setFriendElements([])
+        return
+      }
+    
+      for(const friend of friends){
+        const friendDoc = firestore.doc("users/" + friend)
+        friendDoc.get().then(doc => {
+          const infoText = statusInfo.get(Object.values(Status)[doc.data()?.status])
+          if(!infoText) throw new Error("Unrecognized Status")
+    
+          friendCards.push(
+            <UserCard profilePictureURL={doc.data()?.profilePictureURL} username={doc.data()?.username} usertag={doc.data()?.usertag} infoText={infoText} key={key++}>
+              <TooltipButton tooltipText="Message">
+                <i className="fa-solid fa-message"></i>
+              </TooltipButton>
+              <TooltipButton tooltipText="Remove Friend" onClick={() => handleClick(friend)}>
+                <i className="fa-solid fa-user-xmark" />
+              </TooltipButton>
+            </UserCard>
+          )
+          if(friendCards.length == friends.length) setFriendElements(friendCards)
+        })
+      }
+    })
 
-    if(friends.length == 0){
-      setFriendElements([])
-      return
-    }
-  
-    for(const friend of friends){
-      const friendDoc = firestore.doc("users/" + friend)
-      friendDoc.get().then(doc => {
-        const infoText = statusInfo.get(Object.values(Status)[doc.data()?.status])
-        if(!infoText) throw new Error("Unrecognized Status")
-  
-        friendCards.push(
-          <UserCard profilePictureURL={doc.data()?.profilePictureURL} username={doc.data()?.username} usertag={doc.data()?.usertag} infoText={infoText} key={key++}>
-            <TooltipButton tooltipText="Remove Friend" onClick={() => handleClick(friend)}>
-              <i className="fa-solid fa-user-xmark" />
-            </TooltipButton>
-          </UserCard>
-        )
-        if(friendCards.length == friends.length) setFriendElements(friendCards)
-      })
-    }
     console.log("Refreshing All Friends...")
   }
 

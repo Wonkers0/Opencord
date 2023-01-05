@@ -38,14 +38,13 @@ export const removeFriend = (friendID: string, userID: string, userDataRef: DocR
   const friendDoc = firestore.doc(`users/${friendID}`)
   friendDoc.get().then(doc => {
     let newFriends = doc.data()?.friends
-    newFriends = newFriends.filter((id: string) => {id != userID})
+    newFriends = newFriends.filter((id: string) => id != userID)
 
     friendDoc?.update({friends: newFriends})
   })
 
   return userDataRef?.get().then(doc => {
-    let newFriends = doc.data()?.friends
-    newFriends = newFriends.filter((id: string) => {id != friendID})
+    const newFriends = doc.data()?.friends.filter((id: string) => id != friendID)
 
     userDataRef?.update({friends: newFriends})
   })

@@ -38,6 +38,9 @@ export default function OnlineFriends({userData, userDataRef}: Props){
     
           friendCards.push(
             <UserCard profilePictureURL={doc.data()?.profilePictureURL} username={doc.data()?.username} usertag={doc.data()?.usertag} infoText={infoText} key={key++}>
+              <TooltipButton tooltipText="Message">
+                <i className="fa-solid fa-message"></i>
+              </TooltipButton>
               <TooltipButton tooltipText="Remove Friend" onClick={() => handleClick(friend)}>
                 <i className="fa-solid fa-user-xmark" />  
               </TooltipButton>

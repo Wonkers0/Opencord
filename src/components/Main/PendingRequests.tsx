@@ -23,7 +23,6 @@ export default function PendingRequests({userData, userDataRef, userID}: Props){
 
 
   const acceptRequest = (requestUserID: string) => {
-    const newIncomingRequests = incomingRequests.filter((el: string) => {el != requestUserID})
     const requestDoc = firestore.doc(`users/${requestUserID}`)
     requestDoc.get().then(doc => {
       const newOutcomingRequests = doc.data()?.outgoingRequests.filter((el: string) => {el != userID})
@@ -35,8 +34,12 @@ export default function PendingRequests({userData, userDataRef, userID}: Props){
         friends: newFriends
       })
     })
-
+    
     userDataRef?.get().then(doc => {
+      console.log(doc.data()?.incomingRequests)
+      console.log(requestUserID)
+      const newIncomingRequests = doc.data()?.incomingRequests.filter((el: string) => el != requestUserID)
+      console.log(newIncomingRequests)
       const newFriends = doc.data()?.friends
       newFriends.push(requestUserID)
 

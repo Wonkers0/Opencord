@@ -15,7 +15,7 @@ export enum IndicatorType{
 }
 
 export default function CircleButton({children, extraClass="", tooltip="😔 Missing Tooltip", clickable=true, indicatorType=IndicatorType.NONE}: BtnProps){
-  const [indicatorState, setIndicatorType] = useState(indicatorType) // Set to selected when clicked on (but no servers rn so just a todo)
+  const [indicatorState, setIndicatorType] = useState(indicatorType) // Set to selected when clicked on (but no servers rn so just a placeholder)
   const circleBtn = useRef<HTMLDivElement>(null)
   const tooltipElem = useRef<HTMLDivElement>(null)
 
