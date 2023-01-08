@@ -24,4 +24,8 @@ Blocked tab is not done yet
 
 I think I broke the online tab lol
 
+Conversation header shows inappropriately with larger conversations
+
+Message timestamps lack trailing digit (e.g. 1:9 PM)
+
 ## If you find a bug or have a suggestion, use the "Issues" tab of this repository.
