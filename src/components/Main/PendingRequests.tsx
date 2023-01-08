@@ -3,7 +3,7 @@ import { useState } from "react"
 import { firestore } from "../../main"
 import { DocRef } from "../App"
 import Linebreak from "../Linebreak"
-import TooltipButton from "../TooltipButton"
+import TooltipButton from "../Buttons/TooltipButton"
 import UserCard from "../UserCard"
 
 interface Props{

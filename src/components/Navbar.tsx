@@ -3,7 +3,7 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { firestore } from "../main";
 import { MenuTab } from "./App";
 import Linebreak from "./Linebreak";
-import NavButton from "./NavButton";
+import NavButton from "./Buttons/NavButton";
 
 interface NavbarProps{
   menuTab: MenuTab,

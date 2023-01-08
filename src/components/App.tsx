@@ -2,13 +2,13 @@ import Sidebar from './Sidebar'
 import "../styles.scss"
 import "../fonts.scss"
 import Navbar from './Navbar'
-import DMList from './DMList'
-import Main from './Main/Main'
+import DMList from './Chat/DMList'
+import Main, { ChatData } from './Main/Main'
 import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useDocument } from 'react-firebase-hooks/firestore'
 import { auth, firestore } from '../main'
-import SignIn from './SignIn'
+import SignIn from './Sign In/SignIn'
 import { doc, DocumentData, DocumentSnapshot } from 'firebase/firestore'
 import firebase from 'firebase/compat'
 
@@ -20,6 +20,23 @@ export enum MenuTab{
   ADD_FRIEND,
   DM,
 }
+interface Chat{
+  DM: string | null,
+  chatID: string
+}
+
+export interface UserData{
+  chats: Chat[],
+  friends: string[],
+  incomingRequests: string[],
+  outgoingRequests: string[],
+  blocked: string[],
+  userStatus: number,
+  status: number,
+  tag: string,
+  username: string,
+  profilePictureURL: string 
+}
 
 export type DocRef = firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
 export type DocSnapshot = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
@@ -29,11 +46,12 @@ export default function App() {
   const [userDataRef, setUserDataRef] = useState<DocRef | null>(null)
   const [loading, setLoading] = useState(true)
   const [user] = useAuthState(auth as any)
+  const [currentChat, viewChat] = useState<ChatData | null>(null)
 
   const [userData, ignored, ignore] = useDocument(
     user ? doc(firestore, 'users', user.uid) : null
   )
-
+  
   const establishRealtimeConnection = function(doc:DocSnapshot, docRef: DocRef) {
     console.log("Trying to establish realtime connection to database... (I am hacking into the mainframe)")
     const userStatus = doc.data()?.userStatus
@@ -62,6 +80,7 @@ export default function App() {
         docRef.update(isOnlineForFirestore)
         setLoading(false)
       });
+      console.log("Established connection to realtime database ✔ (I have hacked into the mainframe)")
     })
   }
   
@@ -73,14 +92,12 @@ export default function App() {
       console.log(user.uid + ' | ' + doc.exists)
       console.log(doc.data())
       if (!doc.exists) {
-        console.log("balls")
         docRef.set({
-          DMs: [],
+          chats: [],
           friends: [],
           incomingRequests: [],
           outgoingRequests: [],
           blocked: [],
-          chats: [],
           userStatus: 0,
           status: 0,
           tag: getNewUserTag(),
@@ -92,13 +109,12 @@ export default function App() {
     })
   }
 
-
+  if(menuTab != MenuTab.DM && currentChat) currentChat.id = ""
 
   if(loading && user) return (
     <div className="loadingWrapper">
       <video src="../src/assets/loading.mp4" autoPlay muted loop />
       <h1>LOADING...</h1>
-      <button className="blurpleBtn" onClick={() => {auth.signOut(); setLoading(true)}}>Sign out</button>
     </div>
   )
   return (
@@ -109,8 +125,8 @@ export default function App() {
           <>
             <Sidebar />
             <Navbar menuTab={menuTab} setMenuTab={setMenuTab} userID={user.uid} />
-            <DMList userData={userData?.data()} />
-            <Main menuTab={menuTab} userData={userData?.data()} userDataRef={userDataRef} userID={user.uid} setMenuTab={setMenuTab} />
+            <DMList setMenuTab={setMenuTab} viewChat={viewChat} currentChat={currentChat?.id} userData={userData?.data()} userID={user.uid} />
+            <Main menuTab={menuTab} userData={userData?.data()} userDataRef={userDataRef} userID={user.uid} setMenuTab={setMenuTab} viewChat={viewChat} currentChat={currentChat}/>
           </>
         ) : (<SignIn />)
       }

@@ -96,7 +96,7 @@ export default function AddFriend({userData, userDataRef, userID}: Props){
       if(!friendRequests.includes(userID)){
         friendRequests.push(userID)
         let outgoingRequests = userData.outgoingRequests
-        outgoingRequests.push(doc.id)
+        if(!outgoingRequests.includes(doc.id)) outgoingRequests.push(doc.id)
 
         userDataRef.update({
           outgoingRequests: outgoingRequests
@@ -111,7 +111,7 @@ export default function AddFriend({userData, userDataRef, userID}: Props){
       errorHeading.current?.classList.add("success")
       if(errorHeading.current){
         errorHeading.current.style.display = "block"
-        errorHeading.current.innerHTML = `Success! Your friend request to <bold>${username}#${tag}</bold> was sent.`
+        errorHeading.current.innerHTML = `Success! Your friend request to <span className="bold">${username}#${tag}</span> was sent.`
       } 
     })
   }

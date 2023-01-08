@@ -1,4 +1,4 @@
-import CircleButton, { IndicatorType } from "./CircleButton";
+import CircleButton, { IndicatorType } from "./Buttons/CircleButton";
 import Linebreak from "./Linebreak";
 
 export default function Sidebar(){

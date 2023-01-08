@@ -9,13 +9,18 @@ $blurpleDark: hsl(235, 51.4%, 52.4%);
 $logoBlurple: hsl(235,86%,65%);
 $strawberryRed: #c83f49;
 $mutedText: hsl(214, 4%, 65.3%);
+$normalText: hsl(210, 2.9%, 86.7%);
 $interactiveHover: hsl(210, 2.9%, 86.7%);
 $statusPositive: hsl(139, 47.1%, 33.3%);
 $navButtonHover: rgb(79,84,92);
 $navButtonSelected: rgba($navButtonHover, 0.7);
+$buttonSecondary: hsl(217, 7.6%, 33.5%);
+$buttonSecondaryHover: hsl(213, 5%, 42.9%);
+$msgBoxBackground: hsl(218, 7.9%, 27.3%);
 $link: hsl(197, 100%, 47.8%);
 $statusDanger: hsl(359, 82.6%, 59.4%);
 $textPositive: hsl(139, 51.6%, 52.2%);
+$messageHover: rgba(4,4,5, 0.07);
 
 $circleBtnSize: 3rem;
 $sidebarPadding: 0.725rem;
@@ -46,13 +51,14 @@ button {
   background-color: unset;
 }
 
-input {
+input, textarea {
   border: none;
   background-color: unset;
+  resize: none;
 }
 
-bold {
-  font-weight: 600;
+.bold {
+  font-weight: 500;
   font-size: inherit;
 }
 
@@ -507,6 +513,11 @@ a:hover{
   transition: background-color 150ms ease-out, border-color 150ms ease-out;
 }
 
+.signIn:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .google{
   background-color: white;
   border: 2px solid darken(white, 25%);
@@ -570,36 +581,6 @@ a:hover{
     min-width: 7rem;
     width: fit-content;
     padding: 0rem 0.2rem;
-
-    .userProfilePicture{
-      width: 1.95rem;
-      height: 1.95rem;
-      position: relative;
-
-      img {
-        border-radius: 1rem;
-
-        position: absolute;
-        left: 0;
-        top: 0;
-
-        width: inherit;
-        height: inherit;
-      }
-
-      .profileStatus{
-        position: absolute;
-        left: 85%;
-        top: 85%;
-        transform: translate(-50%, -50%);
-
-        width: 0.65rem;
-        height: 0.65rem;
-        border-radius: 1rem;
-        background-color: $backgroundTertiaryLighter;
-        outline: 3px solid $backgroundTertiaryLighter;
-      }
-    } 
 
     .username{
       width: 9rem;
@@ -895,4 +876,246 @@ a:hover{
     color: $mutedText;
     font-weight: 500;
   }
+}
+
+
+.chatWrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  width: 100%;
+  height: 100%;
+  padding: 1rem 0rem;
+
+  header {
+    display: flex;
+    flex-direction: column;
+    padding: 0rem 1rem;
+
+    img{
+      width: 5rem;
+      aspect-ratio: 1;
+      border-radius: 100%;
+    }
+
+    .DMUsername{
+      font-weight: 700;
+      color: white;
+      font-size: 2rem;
+      margin: 0.5rem 0;
+    }
+
+    .DMSubtitle{
+      color: $mutedText;
+    }
+
+    .DMButtons{
+      display: flex;
+      gap: 0.5rem;
+
+      margin-top: 1rem;
+    }
+  }
+
+  .msgBoxWrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: calc(100% - 2rem);
+
+    max-height: 30rem;
+    height: fit-content;
+
+    margin: auto;
+    margin-bottom: 0.25rem;
+    margin-top: 1.75rem;
+    border-radius: 0.5rem;
+    padding: 0rem 1rem;
+
+    background-color: $msgBoxBackground;
+
+    .msgBox{
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+
+      width: calc(100% - 2.75rem);
+      min-height: 2.75rem;
+
+      textarea{
+        width: 100%;
+        color: white;
+        overflow-y: hidden;
+        margin: 0.5rem 0;
+      }
+    }
+  }
+}
+
+.secondaryBtn{
+  padding: 0.125rem 1rem;
+  height: 1.5rem;
+
+  border-radius: 0.25rem;
+
+  background-color: $buttonSecondary;
+  color: white;
+  font-size: 14px;
+  font-weight: 400;
+
+  transition: background-color 100ms ease-out;
+}
+
+.secondaryBtn:hover{
+  background-color: $buttonSecondaryHover;
+}
+
+.msgBoxBtn{
+  color: $mutedText;
+  cursor: pointer;
+
+  font-size: 1.5rem;
+  transition: color 150ms ease-out;
+}
+
+.msgBoxBtn:hover{
+  color: lighten($mutedText, 25%);
+}
+
+.messageWrapper{
+  display: flex;
+  gap: 1rem;
+
+  margin-top: 1rem;
+  padding: 0.15rem 1rem;
+
+  & > img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+  }
+
+  .msgInfo{
+    & > h1{
+      .username{
+        color: white;
+        font-weight: 400;
+        margin-right: 0.3rem;
+      }
+
+      .msgTimestamp{
+        color: $mutedText;
+        font-size: 0.75rem;
+      }
+    }
+
+    & > p{
+      color: $normalText;
+    }
+  }
+}
+
+.messageWrapper:hover{
+  background-color: $messageHover; 
+}
+
+.userProfilePicture{
+  width: 1.95rem;
+  height: 1.95rem;
+  position: relative;
+
+  img {
+    border-radius: 1rem;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: inherit;
+    height: inherit;
+  }
+
+  .profileStatus{
+    position: absolute;
+    left: 85%;
+    top: 85%;
+    transform: translate(-50%, -50%);
+
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 1rem;
+    background-color: $backgroundTertiaryLighter;
+    outline: 3px solid $backgroundTertiaryLighter;
+  }
+}
+
+.chatCard{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0rem 0.5rem;
+  width: 100%;
+  height: 2.625rem;
+
+  color: $mutedText;
+  border-radius: 0.25rem;
+
+  & > div{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    h1 {
+      font-weight: 400;
+      line-height: 40px;
+      text-overflow: ellipsis;
+    }
+  }
+
+  svg{
+    color: $mutedText;
+    display: none;
+  }
+
+  svg:hover {
+    color: $normalText;
+  }
+}
+
+.chatCard:hover{
+  background-color: $backgroundPrimary;
+  color: $normalText;
+
+  svg {
+    display: block;
+  }
+}
+
+.chatCard.selected{
+  background-color: lighten($backgroundPrimary, 5%);
+  color: white;
+}
+
+.messages{
+  overflow-y: scroll;
+  width: calc(100% - 0.5rem)
+}
+
+::-webkit-scrollbar {
+  width: 0.75rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $backgroundTertiaryLighter;
+  border-radius: 1.5rem;
+  position: absolute;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $backgroundTertiary; 
+  border-radius: 1.5rem;
 }

@@ -7,10 +7,19 @@ Check security rules at `firebase.rules`
 Only authentification via google is done yet
 
 ## 🔥 Known Issues: (In build but not necessarily development)
-~~Accepting one friend request gets rid of all of them instead of only the one you accepted~~
 
 Having multiple tabs open and closing only 1 will set the user as offline
 
-~~Need to set height property on user card at the bottom instead of assuming 1:1 aspect ratio~~
+Can message users even if you've unfriended them (I was too lazy to incorporate a fix into the current build)
 
-~~Loading app fails when user first signs up (can be fixed with a refresh if you're having this problem)~~
+Display of friends in "All" tab can be optimized to make less reads to the database
+
+"Remove Friend" and "Block" buttons in DM header are not implemented yet
+
+User tags are generated randomly (So duplicates may occur in very rare cases)
+
+Cannot cancel outgoing requests (Cancel button is a placeholder)
+
+Blocked tab is not done yet
+
+## If you find a bug or have a suggestion, use the "Issues" tab of this repository.

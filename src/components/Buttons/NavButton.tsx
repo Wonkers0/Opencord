@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import { MenuTab } from "./App"
+import { MenuTab } from "../App"
 
 interface NavButtonProps{
   text: string,

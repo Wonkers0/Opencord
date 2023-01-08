@@ -1,6 +1,6 @@
 import { DocumentData } from "firebase/firestore";
 import ProfilePicture, { Status } from "./ProfilePicture";
-import TooltipButton from "./TooltipButton";
+import TooltipButton from "./Buttons/TooltipButton";
 
 interface Props{
   userData: DocumentData | undefined

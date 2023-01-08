@@ -1,5 +1,5 @@
 import firebase from 'firebase/compat/app'
-import { auth } from '../main';
+import { auth } from '../../main';
 
 export enum ThirdParty{
   GOOGLE="Google",
@@ -8,10 +8,11 @@ export enum ThirdParty{
 }
 
 interface Props{
-  thirdParty: ThirdParty
+  thirdParty: ThirdParty,
+  disabled?: boolean
 }
 
-export default function ThirdPartySignIn({thirdParty}: Props){
+export default function ThirdPartySignIn({thirdParty, disabled=false}: Props){
   const providers = new Map<ThirdParty, firebase.auth.AuthProvider>([
     [ThirdParty.GOOGLE, new firebase.auth.GoogleAuthProvider()],
     [ThirdParty.GITHUB, new firebase.auth.GithubAuthProvider()]
@@ -26,7 +27,7 @@ export default function ThirdPartySignIn({thirdParty}: Props){
   }
   
   return (
-    <button className={`signIn ${className}`} onClick={() => signIn(thirdParty)}>
+    <button className={`signIn ${className}`} onClick={() => signIn(thirdParty)} disabled={disabled}>
       <img src={`../src/assets/${className}.png`} alt="Third Party Sign In Logo" />
       Sign in with {thirdParty}
     </button>

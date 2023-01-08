@@ -3,17 +3,20 @@ import { useEffect, useState } from "react";
 import { firestore } from "../../main";
 import { DocRef, MenuTab } from "../App";
 import { Status, statusInfo } from "../ProfilePicture";
-import TooltipButton from "../TooltipButton";
+import TooltipButton from "../Buttons/TooltipButton";
 import UserCard from "../UserCard";
+import { startDMWithUser } from "./Chat";
 import { removeFriend } from "./Main";
 
 interface Props{
   userData: DocumentData | undefined,
   userDataRef: DocRef | null,
-  setMenuTab: Function
+  setMenuTab: Function,
+  userID: string,
+  viewChat: Function
 }
 
-export default function AllFriends({userData, userDataRef, setMenuTab}: Props){
+export default function AllFriends({userData, userDataRef, setMenuTab, userID, viewChat}: Props){
   const [friendElements, setFriendElements] = useState<JSX.Element[]>([])
 
   const refreshTab = () => {
@@ -32,10 +35,10 @@ export default function AllFriends({userData, userDataRef, setMenuTab}: Props){
         friendDoc.get().then(doc => {
           const infoText = statusInfo.get(Object.values(Status)[doc.data()?.status])
           if(!infoText) throw new Error("Unrecognized Status")
-    
+          
           friendCards.push(
             <UserCard profilePictureURL={doc.data()?.profilePictureURL} username={doc.data()?.username} usertag={doc.data()?.usertag} infoText={infoText} key={key++}>
-              <TooltipButton tooltipText="Message">
+              <TooltipButton tooltipText="Message" onClick={() => startDMWithUser(userID, friend, setMenuTab, viewChat)}>
                 <i className="fa-solid fa-message"></i>
               </TooltipButton>
               <TooltipButton tooltipText="Remove Friend" onClick={() => handleClick(friend)}>

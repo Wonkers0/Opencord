@@ -1,21 +1,44 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-  
+  	
+    match /chats/{chat} {
+    	allow read: if user() != null && chatContainsUser(chat)
+    	allow update: if user() != null && chatContainsUser(chat)
+      allow create
+    }
+    
     match /users/{user} {
       allow read: if user() != null
       allow create: if user() != null && ownsDoc(user)
-      allow update: if user() != null && ownsDoc(user) || 
-      (requestChangesOnlyTheseFields(["friends", "incomingRequests", "outgoingRequests"]) 
-      && canChangeFriend())
+      allow update: if user() != null && (ownsDoc(user) || 
+      (requestChangesOnlyTheseFields(["friends", "incomingRequests", "outgoingRequests", "chats"]) 
+      && canChangeFriend(user)))
     }
 
     function user(){
       return request.auth
     }
 
+    function userData(){
+      return get(/databases/$(database)/documents/users/$(user().uid)).data
+    }
+    
+    function chatData(chat){
+      return get(/databases/$(database)/documents/chats/$(chat)).data
+    }
+
     function ownsDoc(id){
       return user().uid == id
+    }
+
+    function isFriendsWith(id){
+      return userData().friends.hasAll([id])
+    }
+    
+    // Checks if the request user is part of a chat 💬
+    function chatContainsUser(chat){
+    	return chatData(chat).users.hasAll([user().uid])
     }
     
     // A user can write to documents of other users only if:
@@ -25,7 +48,7 @@ service cloud.firestore {
     // (This isn't being checked here but is above on line 9)
     // 3. The only element added or removed from these lists is the ID
     // of the user (Can't remove other people from your friends' friends list)
-    function canChangeFriend(){
+    function canChangeFriend(docID){
     	// This stops users from adding themselves (or someone else) 
     	// to somebody else's friends list without a friend request 
     	// (That would be quite bad 👽)
@@ -38,11 +61,15 @@ service cloud.firestore {
     	resource.data.outgoingRequests.toSet().hasAll(friendsDiff); 
       // 👆 Do the users that are being added to this friends' list already
       //  have a friend request?
+      
+      let addingChatToFriendValidly =
+      changedData().hasAll(["chats"]) == false ||
+      (isAddingButNotRemoving("chats") && isFriendsWith(docID));
+      
 		      
-    
-    	return addingSelfToFriendsValidly || 
-      (isAddingSelfToField("incomingRequests", user().uid) || 
-      isRemovingSelfFromField("outgoingRequests", user().uid))
+    	return addingSelfToFriendsValidly && addingChatToFriendValidly && 
+      (isAddingSelfToField("incomingRequests", user().uid) &&
+      isRemovingSelfFromField("outgoingRequests", user().uid));
     }
     
     // Checks if the request is only adding the 
@@ -52,7 +79,8 @@ service cloud.firestore {
       let newList = requestData()[fieldName];
       
       let sizeMatches = newList.size() == oldList.size() + 1;
-      return sizeMatches && arrayDiff(newList, oldList) == [userID].toSet();
+      return newList.size() == oldList.size() || // The field (🐈) did not change
+      sizeMatches && arrayDiff(newList, oldList) == [userID].toSet();
     }
     
     function isRemovingSelfFromField(fieldName, userID){
@@ -60,7 +88,15 @@ service cloud.firestore {
       let newList = requestData()[fieldName];
       
       let sizeMatches = newList.size() == oldList.size() - 1;
-      return sizeMatches && arrayDiff(oldList, newList) == [userID].toSet();
+      return newList.size() == oldList.size() || // The field (🐈) did not change
+      (sizeMatches && arrayDiff(oldList, newList) == [userID].toSet());
+    }
+    
+    function isAddingButNotRemoving(fieldName){
+      let oldList = resource.data[fieldName];
+      let newList = requestData()[fieldName];
+      
+      return newList.hasAll(oldList);
     }
     
     function arrayDiff(arr1, arr2){
