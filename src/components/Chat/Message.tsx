@@ -12,7 +12,7 @@ export default function Message({author, content, timestamp}: MessageProps){
     const msgText = useRef<HTMLParagraphElement>(null)
 
     useEffect(() => {
-        if(msgText.current) msgText.current.innerHTML = content.replaceAll("\\n", "<br />")
+        if(msgText.current) msgText.current.innerText = content.replaceAll("\\n", "<br />")
     }, [])
 
     return (
