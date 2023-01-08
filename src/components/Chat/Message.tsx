@@ -12,7 +12,7 @@ export default function Message({author, content, timestamp}: MessageProps){
     const msgText = useRef<HTMLParagraphElement>(null)
 
     useEffect(() => {
-        if(msgText.current) msgText.current.innerText = content.replaceAll("\\n", "<br />")
+        if(msgText.current) msgText.current.innerText = content.replaceAll("\\n", "\n")
     }, [])
 
     return (
@@ -40,7 +40,7 @@ function getMsgDate(date: Date): string {
             msgDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     }
 
-    msgTime = `${date.getHours() % 12 == 0 ? 12 : date.getHours() % 12}:${date.getMinutes()} ${date.getHours() > 12 ? "PM" : "AM"}`
+    msgTime = `${date.getHours() % 12 == 0 ? 12 : date.getHours() % 12}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()} ${date.getHours() > 12 ? "PM" : "AM"}`
     return `${msgDate} ${msgTime}`
 }
 

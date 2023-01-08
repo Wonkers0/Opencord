@@ -111,7 +111,16 @@ export default function AddFriend({userData, userDataRef, userID}: Props){
       errorHeading.current?.classList.add("success")
       if(errorHeading.current){
         errorHeading.current.style.display = "block"
-        errorHeading.current.innerText = `Success! Your friend request to <span className="bold">${username}#${tag}</span> was sent.`
+
+        errorHeading.current.innerHTML = ""
+        errorHeading.current.insertAdjacentText("afterbegin", "Success! your friend request to ")
+
+        const name = document.createElement("span")
+        name.classList.add("bold")
+        name.innerText = `${username}#${tag}`
+
+        errorHeading.current.append(name)
+        errorHeading.current.insertAdjacentText("beforeend", " was sent.")
       } 
     })
   }

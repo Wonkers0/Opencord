@@ -25,7 +25,7 @@ export default function PendingRequests({userData, userDataRef, userID}: Props){
   const acceptRequest = (requestUserID: string) => {
     const requestDoc = firestore.doc(`users/${requestUserID}`)
     requestDoc.get().then(doc => {
-      const newOutcomingRequests = doc.data()?.outgoingRequests.filter((el: string) => {el != userID})
+      const newOutcomingRequests = doc.data()?.outgoingRequests.filter((el: string) => el != userID)
       const newFriends = doc.data()?.friends
       newFriends.push(userID)
 
@@ -51,10 +51,28 @@ export default function PendingRequests({userData, userDataRef, userID}: Props){
   }
 
   const rejectRequest = (requestUserID: string) => {
-    const newRequests = incomingRequests.filter((el: string) => {el != requestUserID})
+    const newRequests = incomingRequests.filter((el: string) => el != requestUserID)
     
     userDataRef?.update({
       incomingRequests: newRequests
+    })
+  }
+
+  const cancelRequest = (requestUserID: string) => {
+    const newRequests = outgoingRequests.filter((el: string) => el != requestUserID)
+    
+    userDataRef?.update({
+      outgoingRequests: newRequests
+    })
+
+    const requestUserDoc = firestore.doc(`users/${requestUserID}`)
+    requestUserDoc.get().then(doc => {
+      const incomingRequests = doc.data()?.incomingRequests
+      if(!incomingRequests) return
+      const newIncomingRequests = incomingRequests.filter((el: string) => el != userID)
+      requestUserDoc.update({
+        incomingRequests: newIncomingRequests
+      })
     })
   }
 
@@ -95,7 +113,7 @@ export default function PendingRequests({userData, userDataRef, userID}: Props){
   
         requestObjects.push(
           <UserCard profilePictureURL={profilePictureURL} username={username} usertag={usertag} infoText="Outgoing Friend Request" key={key++}>
-            <TooltipButton tooltipText="Cancel" className="deny">
+            <TooltipButton tooltipText="Cancel" className="deny" onClick={() => cancelRequest(request)}>
               <svg aria-hidden="true" role="img" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"></path></svg>
             </TooltipButton>
           </UserCard>

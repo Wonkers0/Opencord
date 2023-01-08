@@ -63,7 +63,7 @@ export default function Chat({chatID, userID, chatterData, DM}: Props){
     <main>
       <div className="chatWrapper">
         <section ref={messagesWrapper} className="messages">
-          {DM && chatterData ? <DMStart chatterData={chatterData} /> : <GroupStart />}
+          {chatData?.data()?.messages.length > messagesToLoad ? <></> : (DM && chatterData ? <DMStart chatterData={chatterData} /> : <GroupStart />)}
           {loadedMessages}
         </section>
         <MsgBox chatterData={chatterData} userID={userID} chatID={chatID} />
@@ -97,10 +97,10 @@ export function createChat(chatDoc: DocRef, users: string[], isDM: boolean): Pro
 }
 
 
-/* 
-  Starts a new DM with another user, unless it already exists, then it switches to it.
-  @param userID - The ID of the user that is currently authenticated on the app
-  @param chatterID - The ID of the user that the first user wants to chat with
+/** 
+  * Starts a new DM with another user, unless it already exists, then it switches to it.
+  * @param userID - The ID of the user that is currently authenticated on the app
+  * @param chatterID - The ID of the user that the first user wants to chat with
 */
 export function startDMWithUser(userID: string, chatterID: string, setMenuTab: Function, viewChat: Function){
   const userDoc = firestore.doc(`users/${userID}`)

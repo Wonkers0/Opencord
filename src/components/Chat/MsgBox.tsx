@@ -23,7 +23,7 @@ export default function MsgBox({chatterData, userID, chatID}: Props){
   
     if(!event.shiftKey && event.key == "Enter"){
       event.preventDefault()
-      let text = textArea.current.value.replaceAll("\\n", "").replaceAll("\n", "\\n")
+      let text = textArea.current.value.replaceAll("\\n", "").replaceAll(/^\n+|\n+$/g, "").replaceAll("\n", "\\n")
 
       if(text.replace(/\\n| |‎|​/gm, "").length == 0) return
       sendMessage(userID, chatID, text)

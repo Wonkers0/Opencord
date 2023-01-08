@@ -111,31 +111,31 @@ export default function App() {
 
   if(menuTab != MenuTab.DM && currentChat) currentChat.id = ""
 
-  return (
-    <h1 style={{color: 'white', position: 'absolute', top:'50%', left:'50%', transform:'translate(-50%, -50%)'}}>I've paused this build to work on security issues & bugs, check again later</h1>
-  )
-
-  // if(loading && user) return (
-  //   <div className="loadingWrapper">
-  //     <video src="../src/assets/loading.mp4" autoPlay muted loop />
-  //     <h1>LOADING...</h1>
-  //   </div>
-  // )
   // return (
-  //   <div>
-  //     {
-  //       user ? 
-  //       (
-  //         <>
-  //           <Sidebar />
-  //           <Navbar menuTab={menuTab} setMenuTab={setMenuTab} userID={user.uid} />
-  //           <DMList setMenuTab={setMenuTab} viewChat={viewChat} currentChat={currentChat?.id} userData={userData?.data()} userID={user.uid} />
-  //           <Main menuTab={menuTab} userData={userData?.data()} userDataRef={userDataRef} userID={user.uid} setMenuTab={setMenuTab} viewChat={viewChat} currentChat={currentChat}/>
-  //         </>
-  //       ) : (<SignIn />)
-  //     }
-  //   </div>
+  //   <h1 style={{color: 'white', position: 'absolute', top:'50%', left:'50%', transform:'translate(-50%, -50%)'}}>I've paused this build to work on security issues & bugs, check again later</h1>
   // )
+
+  if(loading && user) return (
+    <div className="loadingWrapper">
+      <video src="../src/assets/loading.mp4" autoPlay muted loop />
+      <h1>LOADING...</h1>
+    </div>
+  )
+  return (
+    <div>
+      {
+        user ? 
+        (
+          <>
+            <Sidebar />
+            <Navbar menuTab={menuTab} setMenuTab={setMenuTab} userID={user.uid} />
+            <DMList setMenuTab={setMenuTab} viewChat={viewChat} currentChat={currentChat?.id} userData={userData?.data()} userID={user.uid} />
+            <Main menuTab={menuTab} userData={userData?.data()} userDataRef={userDataRef} userID={user.uid} setMenuTab={setMenuTab} viewChat={viewChat} currentChat={currentChat}/>
+          </>
+        ) : (<SignIn />)
+      }
+    </div>
+  )
 }
 
 const getNewUserTag = () => {

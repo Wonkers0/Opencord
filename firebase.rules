@@ -66,9 +66,12 @@ service cloud.firestore {
       changedData().hasAll(["chats"]) == false ||
       (isAddingButNotRemoving("chats") && isFriendsWith(docID));
       
+      let isUpdatingIncomingRequestsProperly = 
+      isAddingSelfToField("incomingRequests", user().uid) ||
+      isRemovingSelfFromField("incomingRequests", user().uid);
 		      
     	return addingSelfToFriendsValidly && addingChatToFriendValidly && 
-      (isAddingSelfToField("incomingRequests", user().uid) &&
+      (isUpdatingIncomingRequestsProperly &&
       isRemovingSelfFromField("outgoingRequests", user().uid));
     }
     

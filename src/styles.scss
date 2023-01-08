@@ -1013,6 +1013,7 @@ a:hover{
 
     & > p{
       color: $normalText;
+      word-break: break-all;
     }
   }
 }
