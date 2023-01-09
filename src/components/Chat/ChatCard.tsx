@@ -8,19 +8,21 @@ interface Props{
     chatterData: DocumentData | undefined,
     chatID: string,
     userID: string,
+    chatterID: string,
     viewChat: Function,
     currentChat: string | undefined,
     setMenuTab: Function
 }
 
-export default function ChatCard({chatterData, chatID, userID, viewChat, currentChat, setMenuTab}: Props){
+export default function ChatCard({chatterData, chatID, userID, chatterID, viewChat, currentChat, setMenuTab}: Props){
     const handleClick = () => {
         setMenuTab(MenuTab.DM)
 
         const chatData: ChatData = {
             id: chatID,
             isDM: true,
-            chatterData: chatterData
+            chatterData: chatterData,
+            chatterID: chatterID
         }
         viewChat(chatData)
     }
@@ -37,12 +39,12 @@ export default function ChatCard({chatterData, chatID, userID, viewChat, current
             userDoc.update({chats: chats}).then(() => {if(chatID == currentChat) setMenuTab(MenuTab.ONLINE_FRIENDS)})
         })
     }
-    
+
     if(!chatterData) return (<></>)
     else return (
         <button className={`chatCard ${currentChat == chatID ? "selected" : ""}`} onClick={handleClick}>
             <div>
-                <ProfilePicture userData={chatterData} profileStatus={Object.values(Status)[chatterData.status]}/>
+                <ProfilePicture userID={chatterID}/>
                 <h1>{chatterData.username}</h1>
             </div>
             <svg onClick={(event) => closeChat(event)} aria-hidden="true" role="img" width="17" height="17" viewBox="0 0 24 24"><path fill="currentColor" d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"></path></svg>

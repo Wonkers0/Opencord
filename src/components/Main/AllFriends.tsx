@@ -56,8 +56,8 @@ export default function AllFriends({userData, userDataRef, setMenuTab, userID, v
 
   const handleClick = (friendID: string) => {
     if(!userDataRef) return
-
-    removeFriend(friendID, userData?.id, userDataRef).then(() => refreshTab())
+    
+    removeFriend(friendID, userID, userDataRef).then(() => refreshTab())
   }
 
   useEffect(() => {

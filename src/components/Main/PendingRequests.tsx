@@ -36,10 +36,7 @@ export default function PendingRequests({userData, userDataRef, userID}: Props){
     })
     
     userDataRef?.get().then(doc => {
-      console.log(doc.data()?.incomingRequests)
-      console.log(requestUserID)
       const newIncomingRequests = doc.data()?.incomingRequests.filter((el: string) => el != requestUserID)
-      console.log(newIncomingRequests)
       const newFriends = doc.data()?.friends
       newFriends.push(requestUserID)
 

@@ -3,15 +3,16 @@ import ProfilePicture, { Status } from "./ProfilePicture";
 import TooltipButton from "./Buttons/TooltipButton";
 
 interface Props{
-  userData: DocumentData | undefined
+  userData: DocumentData | undefined,
+  userID: string
 }
 
-export default function UserInfo({userData}: Props){
+export default function UserInfo({userData, userID}: Props){
 
   return (
     <div className="userWrapper">
       <div className="userInfo">
-        <ProfilePicture profileStatus={Object.values(Status)[userData?.status]} userData={userData}/>
+        <ProfilePicture userID={userID}/>
         
         <div className="username">
           <span id="username">{userData?.username}</span>

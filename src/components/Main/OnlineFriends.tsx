@@ -9,17 +9,16 @@ import { startDMWithUser } from "./Chat"
 import { removeFriend } from "./Main"
 
 interface Props{
-  userData: DocumentData | undefined,
   userDataRef: DocRef | null,
   setMenuTab: Function,
   userID: string,
   viewChat: Function
 }
 
-export default function OnlineFriends({userData, userDataRef, setMenuTab, userID, viewChat}: Props){
+export default function OnlineFriends({userDataRef, setMenuTab, userID, viewChat}: Props){
   const [friendElements, setFriendElements] = useState<JSX.Element[]>([])
 
-  let refreshTab = () => {
+  const refreshTab = () => {
     userDataRef?.get().then(doc => {
       const friends = doc.data()?.friends
       const friendCards: JSX.Element[] = []
@@ -31,28 +30,32 @@ export default function OnlineFriends({userData, userDataRef, setMenuTab, userID
         return
       }
   
+      const dbPromises: Promise<any>[] = []
+
       for(const friend of friends){
-        const friendDoc = firestore.doc("users/" + friend)
-        friendDoc.get().then(doc => {
-          const infoText = statusInfo.get(Object.values(Status)[doc.data()?.status])
-          if(!infoText) throw new Error("Unrecognized Status")
-          
-          friendsEvaluated++
-          if(doc.data()?.status == 3) return
-    
-          friendCards.push(
-            <UserCard profilePictureURL={doc.data()?.profilePictureURL} username={doc.data()?.username} usertag={doc.data()?.usertag} infoText={infoText} key={key++}>
-              <TooltipButton tooltipText="Message" onClick={() => startDMWithUser(userID, friend, setMenuTab, viewChat)}>
-                <i className="fa-solid fa-message"></i>
-              </TooltipButton>
-              <TooltipButton tooltipText="Remove Friend" onClick={() => handleClick(friend)}>
-                <i className="fa-solid fa-user-xmark" />  
-              </TooltipButton>
-            </UserCard>
-          )
-          if(friendsEvaluated == friends.length) setFriendElements(friendCards)
-        })
+        dbPromises.push(
+          firestore.doc(`users/${friend}`).get().then(doc => {
+            const infoText = statusInfo.get(Object.values(Status)[doc.data()?.status])
+            if(!infoText) throw new Error("Unrecognized Status")
+            
+            friendsEvaluated++
+            if(doc.data()?.status == 3) return
+      
+            friendCards.push(
+              <UserCard profilePictureURL={doc.data()?.profilePictureURL} username={doc.data()?.username} usertag={doc.data()?.usertag} infoText={infoText} key={key++}>
+                <TooltipButton tooltipText="Message" onClick={() => startDMWithUser(userID, friend, setMenuTab, viewChat)}>
+                  <i className="fa-solid fa-message"></i>
+                </TooltipButton>
+                <TooltipButton tooltipText="Remove Friend" onClick={() => handleClick(friend)}>
+                  <i className="fa-solid fa-user-xmark" />  
+                </TooltipButton>
+              </UserCard>
+            )
+          })
+        )
       }
+
+      Promise.all(dbPromises).then(() => setFriendElements(friendCards))
   
       console.log("Refreshing Online Friends...")
     })
@@ -68,7 +71,7 @@ export default function OnlineFriends({userData, userDataRef, setMenuTab, userID
   const handleClick = (friendID: string) => {
     if(!userDataRef) return
     
-    removeFriend(friendID, userData?.id, userDataRef).then(() => refreshTab())
+    removeFriend(friendID, userID, userDataRef).then(() => refreshTab())
   }
 
   return (

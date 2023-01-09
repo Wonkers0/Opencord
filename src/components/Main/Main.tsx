@@ -20,16 +20,17 @@ interface MainProps{
 export interface ChatData{
   id: string,
   isDM: boolean,
-  chatterData?: DocumentData
+  chatterData?: DocumentData,
+  chatterID?: string
 }
 
 export default function Main({menuTab, userData, userDataRef, userID, setMenuTab, viewChat, currentChat}: MainProps): JSX.Element{
   const menuTabs = new Map<MenuTab, JSX.Element>([
-    [MenuTab.ONLINE_FRIENDS, <OnlineFriends userData={userData} userDataRef={userDataRef} setMenuTab={setMenuTab} userID={userID} viewChat={viewChat} />],
+    [MenuTab.ONLINE_FRIENDS, <OnlineFriends userDataRef={userDataRef} setMenuTab={setMenuTab} userID={userID} viewChat={viewChat} />],
     [MenuTab.ADD_FRIEND, <AddFriend userData={userData} userDataRef={userDataRef} userID={userID} />],
     [MenuTab.PENDING_REQUESTS, <PendingRequests userData={userData} userDataRef={userDataRef} userID={userID} />],
     [MenuTab.ALL_FRIENDS, <AllFriends userData={userData} userDataRef={userDataRef} setMenuTab={setMenuTab} userID={userID} viewChat={viewChat} />],
-    [MenuTab.DM, !currentChat ? (<></>) : (<Chat chatID={currentChat.id} userID={userID} chatterData={currentChat.chatterData} DM={currentChat.isDM} />)]
+    [MenuTab.DM, !currentChat ? (<></>) : (<Chat chatID={currentChat.id} userID={userID} chatterData={currentChat.chatterData} DM={currentChat.isDM} userData={userData} chatterID={currentChat.chatterID}/>)]
   ])
 
   const mapTab = menuTabs.get(menuTab)

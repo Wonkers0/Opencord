@@ -10,10 +10,6 @@ Only authentification via google is done yet
 
 Status can display offline even when online
 
-Can message users even if you've unfriended them (I was too lazy to incorporate a fix into the current build)
-
-"Remove Friend" and "Block" buttons in DM header are not implemented yet
-
-Blocked tab is not done yet
+Blocked tab is not done yet *(low priority)*
 
 ## If you find a bug or have a suggestion, use the "Issues" tab of this repository.

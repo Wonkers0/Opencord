@@ -1,9 +1,6 @@
-import { DocumentData } from "firebase/firestore"
-
-export enum PFPType{
-  WITH_STATUS,
-  WITHOUT_STATUS
-}
+import { doc } from "firebase/firestore"
+import { useDocument } from "react-firebase-hooks/firestore"
+import { firestore } from "../main"
 
 export enum Status{
   ONLINE="onlineStatus",
@@ -20,17 +17,16 @@ export const statusInfo = new Map<Status, string>([
 ])
 
 interface Props{
-  pfpType?: PFPType,
-  profileStatus?: Status,
-  userData: DocumentData | undefined
+  userID: string
 }
 
-export default function ProfilePicture({pfpType=PFPType.WITH_STATUS, profileStatus=Status.ONLINE, userData}: Props){
-  const status = pfpType == PFPType.WITH_STATUS ? <img src={`../src/assets/${profileStatus}.png`} alt="Profile Status" className="profileStatus" /> : <></>
+export default function ProfilePicture({userID}: Props){
+  const [userData, loading, error] = useDocument(doc(firestore, `users/${userID}`))
+  const status = !loading ? <img src={`../src/assets/${Object.values(Status)[userData?.data()?.status]}.png`} alt="Profile Status" className="profileStatus" /> : <></>
   
   return (
     <div className="userProfilePicture">
-      <img src={userData ? userData.profilePictureURL : "../src/assets/404.svg"} alt="Profile Picture" id="userPFP" />
+      <img src={loading ? "../src/assets/loadingProfile.svg" : userData?.data()?.profilePictureURL} alt="Profile Picture" id="userPFP" />
       {status}
     </div>
   )

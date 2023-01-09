@@ -24,7 +24,7 @@ export default function DMList({userData, setMenuTab, viewChat, userID, currentC
       
       dbPromises.push(
         firestore.doc(`users/${chat.DM}`).get().then(doc => {
-          loadedChats.push(<ChatCard key={i++} currentChat={currentChat} viewChat={viewChat} setMenuTab={setMenuTab} chatID={chat.chatID} userID={userID} chatterData={doc.data()} />)
+          loadedChats.push(<ChatCard key={i++} currentChat={currentChat} viewChat={viewChat} setMenuTab={setMenuTab} chatID={chat.chatID} userID={userID} chatterID={chat.DM} chatterData={doc.data()} />)
         })
       )
     }
@@ -52,7 +52,7 @@ export default function DMList({userData, setMenuTab, viewChat, userID, currentC
         chats
       }
 
-      <UserInfo userData={userData} />
+      <UserInfo userData={userData} userID={userID}/>
     </section>
   )
 }

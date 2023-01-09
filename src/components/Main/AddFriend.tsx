@@ -148,3 +148,24 @@ export default function AddFriend({userData, userDataRef, userID}: Props){
     </main>
   )
 }
+
+export const addUserAsFriend = (userID: string, userData: DocumentData, friendID: string) => {
+  const friendDoc = firestore.doc(`users/${friendID}`)
+
+  friendDoc.get().then(doc => {
+    let friendRequests = doc.data()?.incomingRequests
+    if(!friendRequests.includes(userID)){
+      friendRequests.push(userID)
+      let outgoingRequests = userData.outgoingRequests
+      if(!outgoingRequests.includes(doc.id)) outgoingRequests.push(doc.id)
+  
+      firestore.doc(`users/${userID}`).update({
+        outgoingRequests: outgoingRequests
+      })
+      
+      doc.ref.update({
+        incomingRequests: friendRequests
+      })
+    }
+  })
+}

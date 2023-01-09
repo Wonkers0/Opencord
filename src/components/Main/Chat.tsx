@@ -13,10 +13,12 @@ interface Props{
   chatID: string,
   userID: string,
   chatterData: DocumentData | undefined,
-  DM: boolean
+  userData: DocumentData | undefined,
+  DM: boolean,
+  chatterID: string | undefined // May be null if chat is not a DM
 }
 
-export default function Chat({chatID, userID, chatterData, DM}: Props){
+export default function Chat({chatID, userID, chatterData, userData, DM, chatterID}: Props){
   let [chatData, loading, error] = useDocument(doc(firestore, "chats", chatID))
   const [loadedMessages, setLoadedMessages] = useState<JSX.Element[]>([])
   const messagesToLoad = 35
@@ -39,13 +41,11 @@ export default function Chat({chatID, userID, chatterData, DM}: Props){
   
       Promise.all(dbReads).then(() => {
         if(messageData){
-          // @ts-ignore
-          const old = messageData.map((x) => x)
           messageData = messageData.splice(Math.max(0, messageData.length - messagesToLoad))
 
           for(const message of messageData){
             let authorData = userMap.get(message.author)
-            if(authorData) messages.push(<Message key={old.indexOf(message)} author={authorData} content={message.content} timestamp={message.sentAt} />)
+            if(authorData) messages.push(<Message key={message.author + message.content + message.sentAt} author={authorData} content={message.content} timestamp={message.sentAt} />)
             else throw Error("Missing message author data 🤔")
           }
         }
@@ -63,10 +63,10 @@ export default function Chat({chatID, userID, chatterData, DM}: Props){
     <main>
       <div className="chatWrapper">
         <section ref={messagesWrapper} className="messages">
-          {chatData?.data()?.messages.length > messagesToLoad ? <></> : (DM && chatterData ? <DMStart chatterData={chatterData} /> : <GroupStart />)}
+          {chatData?.data()?.messages.length > messagesToLoad ? <></> : (DM && chatterData ? <DMStart userID={userID} chatterID={chatterID} chatterData={chatterData} userData={userData} /> : <GroupStart />)}
           {loadedMessages}
         </section>
-        <MsgBox chatterData={chatterData} userID={userID} chatID={chatID} />
+        <MsgBox chatterData={chatterData} userID={userID} chatID={chatID} DM={DM ? chatterID : null} userData={userData} />
       </div>
     </main>
   )

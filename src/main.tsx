@@ -16,7 +16,8 @@ firebase.initializeApp({
 
 export const auth = firebase.auth()
 export const firestore = firebase.firestore()
+export const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+root.render(
   <App />
 )

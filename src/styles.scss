@@ -1120,3 +1120,68 @@ a:hover{
   background: $backgroundTertiary; 
   border-radius: 1.5rem;
 }
+
+.popupBackground{
+  position: absolute;
+  z-index: 9998;
+  left: 0; 
+  top: 0;
+
+  width: 100vw;
+  height: 100vw;
+
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.popup{
+  width: 27.5rem;
+  height: 12.5rem;
+  max-width: 100vw;
+
+  position: absolute;
+  z-index: 9999;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  background-color: $backgroundPrimary;
+  border-radius: 0.25rem 0.25rem 0rem 0rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  h1 {
+    color: white;
+    text-transform: uppercase;
+    font-weight: 500;
+
+    margin: 1.5rem 0rem;
+  }
+
+  h2 {
+    color: $normalText;
+  }
+
+  footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    background-color: $backgroundSecondary;
+
+    width: 100%;
+    height: 5.125rem;
+    padding: 1rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    button{
+      height: 100%;
+      width: 100%;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+  }
+}

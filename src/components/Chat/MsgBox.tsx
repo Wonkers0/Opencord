@@ -1,15 +1,18 @@
 import { DocumentData, serverTimestamp } from "firebase/firestore";
 import { KeyboardEvent, useRef } from "react";
-import { firestore } from "../../main";
+import { firestore, root } from "../../main";
 import TooltipButton from "../Buttons/TooltipButton";
+import Popup, { showPopup } from "../Popup";
 
 interface Props{
   chatterData: DocumentData | undefined,
+  userData: DocumentData | undefined,
   userID: string,
-  chatID: string
+  chatID: string,
+  DM: string | null | undefined
 }
 
-export default function MsgBox({chatterData, userID, chatID}: Props){
+export default function MsgBox({chatterData, userData, userID, chatID, DM}: Props){
   const textArea = useRef<HTMLTextAreaElement>(null)
 
   const handleInput = (event: KeyboardEvent) => {
@@ -26,6 +29,11 @@ export default function MsgBox({chatterData, userID, chatID}: Props){
       let text = textArea.current.value.replaceAll("\\n", "").replaceAll(/^\n+|\n+$/g, "").replaceAll("\n", "\\n")
 
       if(text.replace(/\\n| |‎|​/gm, "").length == 0) return
+      if(DM != null && !userData?.friends.includes(DM)){ // User not friends with receiver
+        showPopup("Can't message this user", "You need to be friends with a user to message them.")
+        return 
+      } 
+
       sendMessage(userID, chatID, text)
       textArea.current.value = ''
     } 

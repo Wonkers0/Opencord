@@ -11,6 +11,7 @@ import { auth, firestore } from '../main'
 import SignIn from './Sign In/SignIn'
 import { doc, DocumentData, DocumentSnapshot } from 'firebase/firestore'
 import firebase from 'firebase/compat'
+import Popup from './Popup'
 
 export enum MenuTab{
   ONLINE_FRIENDS,
@@ -89,8 +90,6 @@ export default function App() {
     setUserDataRef(docRef)
 
     docRef.get().then(doc => {
-      console.log(user.uid + ' | ' + doc.exists)
-      console.log(doc.data())
       if (!doc.exists) {
         docRef.set({
           chats: [],
@@ -123,6 +122,7 @@ export default function App() {
   )
   return (
     <div>
+      <Popup />
       {
         user ? 
         (
